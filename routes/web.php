@@ -1,6 +1,11 @@
 <?php
 
+use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\CommandeController as AdminCommandeController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboard;
+use App\Http\Controllers\Admin\PlatController;
+use App\Http\Controllers\Admin\TableController;
+use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Cuisine\CommandeController as CuisineCommandeController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\ProfileController;
@@ -31,6 +36,19 @@ Route::middleware('auth')->group(function () {
 // Espace administrateur.
 Route::middleware(['auth', 'role:'.User::ROLE_ADMIN])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', [AdminDashboard::class, 'index'])->name('dashboard');
+
+    Route::get('tables/qr/imprimer', [TableController::class, 'imprimer'])->name('tables.imprimer');
+    Route::get('tables/{table}/qr.png', [TableController::class, 'qrPng'])->name('tables.qr.png');
+    Route::get('tables/{table}/qr.svg', [TableController::class, 'qrSvg'])->name('tables.qr.svg');
+
+    Route::resource('categories', CategoryController::class)
+        ->parameters(['categories' => 'categorie'])
+        ->except('show');
+    Route::resource('plats', PlatController::class)->except('show');
+    Route::patch('plats/{plat}/disponible', [PlatController::class, 'toggleDisponible'])->name('plats.disponible');
+    Route::resource('tables', TableController::class)->except('show');
+    Route::resource('users', UserController::class)->except('show');
+    Route::resource('commandes', AdminCommandeController::class)->only(['index', 'show', 'update']);
 });
 
 // Espace cuisine.

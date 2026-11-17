@@ -7,7 +7,7 @@ Application web de commande de plats au restaurant via QR Code. Chaque table pos
 - **Backend** : Laravel 12 (PHP 8.2+), architecture MVC, Eloquent ORM
 - **Base de données** : MySQL (XAMPP en local)
 - **Frontend** : Blade + Tailwind CSS + Alpine.js (mobile-first)
-- **QR Code** : `simplesoftwareio/simple-qrcode`
+- **QR Code** : `endroid/qr-code` (PNG via GD, SVG)
 - **Temps réel** : polling AJAX (5–10 s) — pas de WebSocket
 - **Auth** : Laravel Breeze, rôles `admin` / `cuisinier` / `serveur`
 
