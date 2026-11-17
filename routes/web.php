@@ -14,6 +14,9 @@ Route::get('/', function () {
 
 // Espace client : accès anonyme via le QR Code de la table.
 Route::get('/menu/{token}', [MenuController::class, 'show'])->name('menu.show');
+Route::post('/menu/{token}/commandes', [MenuController::class, 'store'])->name('menu.commandes.store');
+Route::get('/menu/{token}/commandes/{numero}', [MenuController::class, 'suivi'])->name('menu.commandes.suivi');
+Route::get('/menu/{token}/api/commandes/{numero}', [MenuController::class, 'statut'])->name('menu.commandes.statut');
 
 Route::get('/dashboard', function () {
     return redirect(auth()->user()->routeAccueil());
