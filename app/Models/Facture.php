@@ -24,4 +24,16 @@ class Facture extends Model
     {
         return $this->belongsTo(Commande::class, 'commande_id');
     }
+
+    /**
+     * Génère le prochain numéro de facture (ex. FAC-20261117-0003).
+     */
+    public static function genererNumero(): string
+    {
+        $prefix = 'FAC-'.now()->format('Ymd').'-';
+        $dernier = static::where('numero', 'like', $prefix.'%')->max('numero');
+        $seq = $dernier ? ((int) substr($dernier, -4)) + 1 : 1;
+
+        return $prefix.str_pad((string) $seq, 4, '0', STR_PAD_LEFT);
+    }
 }

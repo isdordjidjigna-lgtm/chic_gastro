@@ -1,4 +1,4 @@
-<div class="grid gap-6 lg:grid-cols-2">
+<div class="grid gap-6 lg:grid-cols-3">
     {{-- Prêtes à servir --}}
     <section>
         <h3 class="font-bold text-gray-800 mb-3">Prêtes à servir <span class="text-sm font-normal text-gray-500">({{ $pretes->count() }})</span></h3>
@@ -28,6 +28,34 @@
                 </article>
             @empty
                 <p class="text-gray-500 text-sm bg-white rounded-xl p-4 shadow-sm">Aucune commande prête.</p>
+            @endforelse
+        </div>
+    </section>
+
+    {{-- En attente d'encaissement --}}
+    <section>
+        <h3 class="font-bold text-gray-800 mb-3">À encaisser <span class="text-sm font-normal text-gray-500">({{ $aEncaisser->count() }})</span></h3>
+        <div class="space-y-4">
+            @forelse($aEncaisser as $commande)
+                <article class="bg-white rounded-xl shadow-sm p-4 border-l-4 border-amber-500">
+                    <div class="flex justify-between items-start mb-2">
+                        <div>
+                            <p class="font-bold text-gray-900">Table {{ $commande->table->numero ?? '—' }}</p>
+                            <p class="text-sm text-gray-500">{{ $commande->numero }} · {{ number_format($commande->total, 0, ',', ' ') }} FCFA</p>
+                        </div>
+                        <form method="POST" action="{{ route('serveur.commandes.payer', $commande) }}">
+                            @csrf
+                            <button class="bg-amber-600 text-white text-sm font-semibold px-4 py-2 rounded-lg">Encaisser</button>
+                        </form>
+                    </div>
+                    <ul class="text-sm space-y-1">
+                        @foreach($commande->lignes as $ligne)
+                            <li><span class="font-semibold">{{ $ligne->quantite }}×</span> {{ $ligne->plat->nom ?? 'Plat supprimé' }}</li>
+                        @endforeach
+                    </ul>
+                </article>
+            @empty
+                <p class="text-gray-500 text-sm bg-white rounded-xl p-4 shadow-sm">Rien à encaisser.</p>
             @endforelse
         </div>
     </section>

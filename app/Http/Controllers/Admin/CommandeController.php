@@ -53,4 +53,15 @@ class CommandeController extends Controller
 
         return redirect()->route('admin.commandes.show', $commande)->with('success', 'Statut mis à jour.');
     }
+
+    /**
+     * Facture imprimable de la commande.
+     */
+    public function facture(Commande $commande): View
+    {
+        abort_unless($commande->facture()->exists(), 404);
+        $commande->load(['table', 'lignes.plat', 'facture', 'paiement.encaisseur']);
+
+        return view('admin.commandes.facture', ['commande' => $commande]);
+    }
 }

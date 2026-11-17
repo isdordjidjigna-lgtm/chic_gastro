@@ -1,6 +1,9 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">Administration</h2>
+        <div class="flex justify-between items-center">
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight">Administration</h2>
+            <a href="{{ route('admin.stats') }}" class="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-semibold">Statistiques</a>
+        </div>
     </x-slot>
 
     <div class="py-12">

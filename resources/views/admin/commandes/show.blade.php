@@ -67,7 +67,8 @@
                             le {{ $commande->paiement->created_at->format('d/m/Y H:i') }}</p>
                     @endif
                     @if($commande->facture)
-                        <p>Facture {{ $commande->facture->numero }} — {{ number_format($commande->facture->montant, 0, ',', ' ') }} FCFA</p>
+                        <p>Facture {{ $commande->facture->numero }} — {{ number_format($commande->facture->montant, 0, ',', ' ') }} FCFA
+                            <a href="{{ route('admin.commandes.facture', $commande) }}" target="_blank" class="text-amber-700 font-semibold">(imprimer)</a></p>
                     @endif
                 </div>
             @endif

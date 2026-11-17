@@ -16,6 +16,7 @@ class CommandeController extends Controller
     {
         return view('serveur.dashboard', [
             'pretes' => $this->commandesPretes(),
+            'aEncaisser' => $this->commandesAEncaisser(),
             'historique' => $this->historique(),
         ]);
     }
@@ -27,6 +28,7 @@ class CommandeController extends Controller
     {
         return view('serveur._commandes', [
             'pretes' => $this->commandesPretes(),
+            'aEncaisser' => $this->commandesAEncaisser(),
             'historique' => $this->historique(),
         ]);
     }
@@ -35,6 +37,17 @@ class CommandeController extends Controller
     {
         return Commande::with(['table', 'lignes.plat'])
             ->where('statut', Commande::PRETE)
+            ->oldest()
+            ->get();
+    }
+
+    /**
+     * Commandes servies en attente d'encaissement.
+     */
+    private function commandesAEncaisser()
+    {
+        return Commande::with(['table', 'lignes.plat', 'paiement'])
+            ->where('statut', Commande::SERVIE)
             ->oldest()
             ->get();
     }

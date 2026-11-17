@@ -18,7 +18,8 @@ Application web de commande de plats au restaurant via QR Code. Chaque table pos
 | Client (anonyme) | `/menu/{token}` via QR Code — carte, panier, commande, suivi |
 | Administrateur | `/admin` — CRUD, utilisateurs, tables, statistiques |
 | Cuisinier | `/cuisine` — accepte les commandes, signale « Prête » |
-| Serveur | `/serveur` — sert les commandes prêtes, historique |
+| Serveur | `/serveur` — sert les commandes prêtes, encaisse en espèces (facture auto), historique |
+| Admin (stats) | `/admin/stats` — CA journalier/mensuel, top plats, graphiques Chart.js |
 
 ## Installation (équipe)
 

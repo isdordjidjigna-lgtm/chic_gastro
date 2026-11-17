@@ -4,12 +4,14 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CommandeController as AdminCommandeController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboard;
 use App\Http\Controllers\Admin\PlatController;
+use App\Http\Controllers\Admin\StatsController;
 use App\Http\Controllers\Admin\TableController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Cuisine\CommandeController as CuisineCommandeController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Serveur\CommandeController as ServeurCommandeController;
+use App\Http\Controllers\Serveur\PaiementController as ServeurPaiementController;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
@@ -49,6 +51,9 @@ Route::middleware(['auth', 'role:'.User::ROLE_ADMIN])->prefix('admin')->name('ad
     Route::resource('tables', TableController::class)->except('show');
     Route::resource('users', UserController::class)->except('show');
     Route::resource('commandes', AdminCommandeController::class)->only(['index', 'show', 'update']);
+    Route::get('commandes/{commande}/facture', [AdminCommandeController::class, 'facture'])->name('commandes.facture');
+    Route::get('stats', [StatsController::class, 'index'])->name('stats');
+    Route::get('stats/donnees', [StatsController::class, 'donnees'])->name('stats.donnees');
 });
 
 // Espace cuisine.
@@ -64,6 +69,7 @@ Route::middleware(['auth', 'role:'.User::ROLE_SERVEUR.','.User::ROLE_ADMIN])->pr
     Route::get('/', [ServeurCommandeController::class, 'index'])->name('dashboard');
     Route::get('/commandes/liste', [ServeurCommandeController::class, 'liste'])->name('commandes.liste');
     Route::post('/commandes/{commande}/servie', [ServeurCommandeController::class, 'servie'])->name('commandes.servie');
+    Route::post('/commandes/{commande}/payer', [ServeurPaiementController::class, 'store'])->name('commandes.payer');
 });
 
 require __DIR__.'/auth.php';

@@ -5,6 +5,9 @@
 
     <div class="py-6" x-data="fileServeur()">
         <div class="max-w-5xl mx-auto sm:px-6 lg:px-8">
+            @if(session('success'))
+                <div class="bg-green-100 border border-green-300 text-green-800 px-4 py-3 rounded-lg mb-4">{{ session('success') }}</div>
+            @endif
             <p class="text-sm text-gray-500 mb-4">Actualisation automatique toutes les 7 secondes.</p>
             <div id="zone-commandes">
                 @include('serveur._commandes')
