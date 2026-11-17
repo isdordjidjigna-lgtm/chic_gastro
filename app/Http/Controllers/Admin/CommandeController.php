@@ -42,6 +42,7 @@ class CommandeController extends Controller
 
     /**
      * L'admin peut faire avancer ou reculer le statut (contrairement aux autres rôles).
+     * Le passage à « Annulée » passe obligatoirement par l'action dédiée (règles appliquées).
      */
     public function update(Request $request, Commande $commande): RedirectResponse
     {
@@ -49,9 +50,30 @@ class CommandeController extends Controller
             'statut' => ['required', 'in:'.implode(',', array_keys(Commande::STATUTS))],
         ]);
 
+        if ($data['statut'] === Commande::ANNULEE) {
+            return redirect()->route('admin.commandes.show', $commande)
+                ->with('error', 'Utilisez le bouton « Annuler la commande » pour appliquer les règles d\'annulation.');
+        }
+
         $commande->update(['statut' => $data['statut']]);
 
         return redirect()->route('admin.commandes.show', $commande)->with('success', 'Statut mis à jour.');
+    }
+
+    /**
+     * Annulation : impossible une fois la commande servie, terminée ou déjà annulée.
+     * L'admin peut annuler jusqu'à « Prête » (y compris « En préparation »).
+     */
+    public function annuler(Commande $commande): RedirectResponse
+    {
+        if (in_array($commande->statut, [Commande::SERVIE, Commande::TERMINEE, Commande::ANNULEE], true)) {
+            return redirect()->route('admin.commandes.show', $commande)
+                ->with('error', 'Cette commande ne peut plus être annulée (déjà servie ou terminée).');
+        }
+
+        $commande->update(['statut' => Commande::ANNULEE]);
+
+        return redirect()->route('admin.commandes.show', $commande)->with('success', 'Commande annulée.');
     }
 
     /**

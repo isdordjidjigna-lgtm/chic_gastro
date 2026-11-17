@@ -102,6 +102,73 @@ class AdminCrudTest extends TestCase
         $this->assertDatabaseHas('users', ['id' => $admin->id]);
     }
 
+    public function test_annulation_une_commande_en_preparation_autorisee(): void
+    {
+        $admin = $this->admin();
+        $table = RestaurantTable::create(['numero' => 'T50', 'actif' => true]);
+        $commande = \App\Models\Commande::create([
+            'numero' => 'CMD-TEST-0001', 'table_id' => $table->id,
+            'statut' => \App\Models\Commande::EN_PREPARATION, 'total' => 5000,
+        ]);
+
+        $this->actingAs($admin)->post(route('admin.commandes.annuler', $commande))
+            ->assertRedirect(route('admin.commandes.show', $commande));
+        $this->assertSame(\App\Models\Commande::ANNULEE, $commande->fresh()->statut);
+    }
+
+    public function test_annulation_refusee_apres_service(): void
+    {
+        $admin = $this->admin();
+        $table = RestaurantTable::create(['numero' => 'T51', 'actif' => true]);
+
+        foreach ([\App\Models\Commande::SERVIE, \App\Models\Commande::TERMINEE] as $statut) {
+            $commande = \App\Models\Commande::create([
+                'numero' => 'CMD-TEST-'.uniqid(), 'table_id' => $table->id,
+                'statut' => $statut, 'total' => 5000,
+            ]);
+
+            $this->actingAs($admin)->post(route('admin.commandes.annuler', $commande))
+                ->assertRedirect();
+            $this->assertNotSame(\App\Models\Commande::ANNULEE, $commande->fresh()->statut);
+        }
+    }
+
+    public function test_statut_annulee_interdit_via_le_select(): void
+    {
+        $admin = $this->admin();
+        $table = RestaurantTable::create(['numero' => 'T52', 'actif' => true]);
+        $commande = \App\Models\Commande::create([
+            'numero' => 'CMD-TEST-0002', 'table_id' => $table->id,
+            'statut' => \App\Models\Commande::EN_ATTENTE, 'total' => 5000,
+        ]);
+
+        $this->actingAs($admin)->put(route('admin.commandes.update', $commande), [
+            'statut' => \App\Models\Commande::ANNULEE,
+        ])->assertRedirect();
+
+        $this->assertSame(\App\Models\Commande::EN_ATTENTE, $commande->fresh()->statut);
+    }
+
+    public function test_historique_des_paiements(): void
+    {
+        $admin = $this->admin();
+        $serveur = User::factory()->create(['role' => User::ROLE_SERVEUR]);
+        $table = RestaurantTable::create(['numero' => 'T53', 'actif' => true]);
+        $commande = \App\Models\Commande::create([
+            'numero' => 'CMD-TEST-0003', 'table_id' => $table->id,
+            'statut' => \App\Models\Commande::SERVIE, 'total' => 7000,
+        ]);
+        \App\Models\Paiement::create([
+            'commande_id' => $commande->id, 'montant' => 7000,
+            'mode' => \App\Models\Paiement::MODE_ESPECES, 'encaisse_par' => $serveur->id,
+        ]);
+
+        $this->actingAs($admin)->get(route('admin.paiements.index'))
+            ->assertOk()
+            ->assertSee('CMD-TEST-0003')
+            ->assertSee('7 000');
+    }
+
     public function test_les_crud_sont_reserves_a_l_admin(): void
     {
         $serveur = User::factory()->create(['role' => User::ROLE_SERVEUR]);
@@ -112,6 +179,7 @@ class AdminCrudTest extends TestCase
         $this->actingAs($serveur)->get(route('admin.tables.index'))->assertForbidden();
         $this->actingAs($serveur)->get(route('admin.users.index'))->assertForbidden();
         $this->actingAs($serveur)->get(route('admin.commandes.index'))->assertForbidden();
+        $this->actingAs($serveur)->get(route('admin.paiements.index'))->assertForbidden();
         $this->actingAs($serveur)->delete(route('admin.categories.destroy', $categorie))->assertForbidden();
     }
 }

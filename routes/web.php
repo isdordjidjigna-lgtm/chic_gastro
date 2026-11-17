@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CommandeController as AdminCommandeController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboard;
+use App\Http\Controllers\Admin\PaiementController as AdminPaiementController;
 use App\Http\Controllers\Admin\PlatController;
 use App\Http\Controllers\Admin\StatsController;
 use App\Http\Controllers\Admin\TableController;
@@ -51,7 +52,9 @@ Route::middleware(['auth', 'role:'.User::ROLE_ADMIN])->prefix('admin')->name('ad
     Route::resource('tables', TableController::class)->except('show');
     Route::resource('users', UserController::class)->except('show');
     Route::resource('commandes', AdminCommandeController::class)->only(['index', 'show', 'update']);
+    Route::post('commandes/{commande}/annuler', [AdminCommandeController::class, 'annuler'])->name('commandes.annuler');
     Route::get('commandes/{commande}/facture', [AdminCommandeController::class, 'facture'])->name('commandes.facture');
+    Route::get('paiements', [AdminPaiementController::class, 'index'])->name('paiements.index');
     Route::get('stats', [StatsController::class, 'index'])->name('stats');
     Route::get('stats/donnees', [StatsController::class, 'donnees'])->name('stats.donnees');
 });

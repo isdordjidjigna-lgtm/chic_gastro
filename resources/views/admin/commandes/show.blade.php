@@ -11,6 +11,9 @@
             @if(session('success'))
                 <div class="bg-green-100 border border-green-300 text-green-800 px-4 py-3 rounded-lg">{{ session('success') }}</div>
             @endif
+            @if(session('error'))
+                <div class="bg-red-100 border border-red-300 text-red-800 px-4 py-3 rounded-lg">{{ session('error') }}</div>
+            @endif
             @if($errors->any())
                 <div class="bg-red-100 border border-red-300 text-red-800 px-4 py-3 rounded-lg">
                     @foreach($errors->all() as $error)<p>{{ $error }}</p>@endforeach
@@ -58,12 +61,20 @@
                 </ul>
             </div>
 
+            @if(!in_array($commande->statut, [\App\Models\Commande::SERVIE, \App\Models\Commande::TERMINEE, \App\Models\Commande::ANNULEE]))
+                <form method="POST" action="{{ route('admin.commandes.annuler', $commande) }}"
+                      onsubmit="return confirm('Annuler définitivement la commande {{ $commande->numero }} ?');">
+                    @csrf
+                    <button class="bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-semibold">Annuler la commande</button>
+                </form>
+            @endif
+
             @if($commande->paiement || $commande->facture)
                 <div class="bg-white rounded-xl shadow-sm p-6 text-sm">
                     <h3 class="font-bold text-gray-800 mb-2">Règlement</h3>
                     @if($commande->paiement)
                         <p>Paiement : {{ number_format($commande->paiement->montant, 0, ',', ' ') }} FCFA en espèces
-                            @if($commande->paiement->encaisseur) par {{ $commande->paiement->encisseur->name }}@endif
+                            @if($commande->paiement->encaisseur) par {{ $commande->paiement->encaisseur->name }}@endif
                             le {{ $commande->paiement->created_at->format('d/m/Y H:i') }}</p>
                     @endif
                     @if($commande->facture)
