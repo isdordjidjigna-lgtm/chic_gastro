@@ -63,10 +63,12 @@ class Commande extends Model
 
     /**
      * Génère le prochain numéro de commande (ex. CMD-20261116-0007).
+     * $date permet de backdater le numéro (seeders, imports).
      */
-    public static function genererNumero(): string
+    public static function genererNumero(?\DateTimeInterface $date = null): string
     {
-        $prefix = 'CMD-'.now()->format('Ymd').'-';
+        $jour = ($date ?? now())->format('Ymd');
+        $prefix = 'CMD-'.$jour.'-';
         $dernier = static::where('numero', 'like', $prefix.'%')->max('numero');
         $seq = $dernier ? ((int) substr($dernier, -4)) + 1 : 1;
 

@@ -108,7 +108,9 @@ class PaiementStatsTest extends TestCase
 
         $reponse = $this->actingAs($admin)->getJson(route('admin.stats.donnees'));
         $reponse->assertOk()->assertJsonStructure([
-            'labels', 'ca', 'commandes', 'top_plats', 'ca_total', 'nb_commandes', 'nb_en_attente',
+            'labels', 'ca', 'commandes', 'top_plats', 'plats_peu',
+            'labels_mois', 'ca_mois',
+            'ca_total', 'nb_commandes', 'nb_en_attente',
         ]);
 
         $data = $reponse->json();
@@ -116,6 +118,8 @@ class PaiementStatsTest extends TestCase
         $this->assertSame(1, $data['nb_commandes']);
         $this->assertSame('Poulet braisé', $data['top_plats'][0]['nom']);
         $this->assertSame(2, $data['top_plats'][0]['qte']);
+        $this->assertCount(12, $data['labels_mois']);
+        $this->assertCount(12, $data['ca_mois']);
     }
 
     public function test_page_stats_affichee(): void

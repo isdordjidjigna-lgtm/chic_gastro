@@ -39,8 +39,19 @@
             </div>
 
             <div class="bg-white rounded-xl shadow-sm p-5">
-                <h3 class="font-bold text-gray-800 mb-4">Plats les plus commandés</h3>
-                <canvas id="chart-top" height="120"></canvas>
+                <h3 class="font-bold text-gray-800 mb-4">CA par mois (12 derniers mois)</h3>
+                <canvas id="chart-mois" height="100"></canvas>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="bg-white rounded-xl shadow-sm p-5">
+                    <h3 class="font-bold text-gray-800 mb-4">Plats les plus commandés</h3>
+                    <canvas id="chart-top" height="120"></canvas>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm p-5">
+                    <h3 class="font-bold text-gray-800 mb-4">Plats les moins commandés</h3>
+                    <ul id="liste-peu" class="divide-y divide-gray-100 text-sm"></ul>
+                </div>
             </div>
         </div>
     </div>

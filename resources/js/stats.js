@@ -2,7 +2,9 @@ import Chart from 'chart.js/auto';
 
 const elCa = document.getElementById('chart-ca');
 const elCmd = document.getElementById('chart-commandes');
+const elMois = document.getElementById('chart-mois');
 const elTop = document.getElementById('chart-top');
+const elPeu = document.getElementById('liste-peu');
 
 if (!elCa || !elCmd || !elTop) {
     // Page stats non affichée : ne rien faire.
@@ -52,6 +54,27 @@ if (!elCa || !elCmd || !elTop) {
             },
             options: { responsive: true, plugins: { legend: { display: false } } },
         }));
+
+        if (elMois) {
+            charts.push(new Chart(elMois, {
+                type: 'bar',
+                data: {
+                    labels: d.labels_mois,
+                    datasets: [{
+                        label: 'Chiffre d\'affaires (FCFA)',
+                        data: d.ca_mois,
+                        backgroundColor: '#4f46e5',
+                    }],
+                },
+                options: { responsive: true, plugins: { legend: { display: false } } },
+            }));
+        }
+
+        if (elPeu) {
+            elPeu.innerHTML = d.plats_peu.map(p =>
+                `<li class="py-2 flex justify-between"><span>${p.nom}</span><span class="font-semibold text-gray-500">${p.qte} vendus</span></li>`
+            ).join('') || '<li class="py-2 text-gray-500">Aucune donnée.</li>';
+        }
 
         charts.push(new Chart(elTop, {
             type: 'bar',

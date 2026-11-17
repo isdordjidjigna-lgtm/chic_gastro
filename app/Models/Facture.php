@@ -27,10 +27,12 @@ class Facture extends Model
 
     /**
      * Génère le prochain numéro de facture (ex. FAC-20261117-0003).
+     * $date permet de backdater le numéro (seeders, imports).
      */
-    public static function genererNumero(): string
+    public static function genererNumero(?\DateTimeInterface $date = null): string
     {
-        $prefix = 'FAC-'.now()->format('Ymd').'-';
+        $jour = ($date ?? now())->format('Ymd');
+        $prefix = 'FAC-'.$jour.'-';
         $dernier = static::where('numero', 'like', $prefix.'%')->max('numero');
         $seq = $dernier ? ((int) substr($dernier, -4)) + 1 : 1;
 

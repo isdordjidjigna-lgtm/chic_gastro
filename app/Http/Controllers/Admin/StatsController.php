@@ -51,6 +51,37 @@ class StatsController extends Controller
             ->get()
             ->map(fn ($l) => ['nom' => $l->nom, 'qte' => (int) $l->qte]);
 
+        // Plats les moins commandés (tous les plats, même jamais commandés).
+        $platsPeu = \App\Models\Plat::query()
+            ->leftJoin('ligne_commandes', 'ligne_commandes.plat_id', '=', 'plats.id')
+            ->selectRaw('plats.nom, COALESCE(SUM(ligne_commandes.quantite), 0) as qte')
+            ->groupBy('plats.id', 'plats.nom')
+            ->orderBy('qte')
+            ->orderBy('plats.nom')
+            ->limit(5)
+            ->get()
+            ->map(fn ($p) => ['nom' => $p->nom, 'qte' => (int) $p->qte]);
+
+        // Chiffre d'affaires par mois (12 derniers mois) — regroupé en PHP
+        // pour rester compatible MySQL et SQLite (tests).
+        $paiementsMois = Paiement::query()
+            ->where('created_at', '>=', now()->subMonths(11)->startOfMonth())
+            ->get(['montant', 'created_at']);
+
+        $parMois = [];
+        foreach ($paiementsMois as $p) {
+            $cle = $p->created_at->format('Y-m');
+            $parMois[$cle] = ($parMois[$cle] ?? 0) + (float) $p->montant;
+        }
+
+        $labelsMois = [];
+        $caMois = [];
+        for ($i = 11; $i >= 0; $i--) {
+            $date = now()->subMonths($i);
+            $labelsMois[] = $date->format('m/Y');
+            $caMois[] = (float) ($parMois[$date->format('Y-m')] ?? 0);
+        }
+
         // Séries complètes sur la période (jours sans données = 0).
         $labels = [];
         $ca = [];
@@ -68,6 +99,9 @@ class StatsController extends Controller
             'ca' => $ca,
             'commandes' => $commandes,
             'top_plats' => $topPlats,
+            'plats_peu' => $platsPeu,
+            'labels_mois' => $labelsMois,
+            'ca_mois' => $caMois,
             'ca_total' => number_format((float) Paiement::sum('montant'), 0, ',', ' '),
             'nb_commandes' => Commande::where('statut', '!=', Commande::ANNULEE)->count(),
             'nb_en_attente' => Commande::whereIn('statut', [Commande::EN_ATTENTE, Commande::EN_PREPARATION, Commande::PRETE])->count(),
