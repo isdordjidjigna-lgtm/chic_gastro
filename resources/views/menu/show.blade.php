@@ -21,7 +21,18 @@
         </div>
         <div class="max-w-3xl mx-auto px-4 pb-3">
             <input type="search" x-model="recherche" placeholder="Rechercher un plat…"
-                   class="w-full border border-gray-300 rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500">
+                   class="w-full border border-gray-300 rounded-full px-4 py-2 text-base focus:outline-none focus:ring-2 focus:ring-amber-500">
+            <div class="flex gap-2 mt-3 overflow-x-auto pb-1 -mx-4 px-4">
+                <button @click="categorieActive = null"
+                        :class="categorieActive === null ? 'bg-amber-600 text-white' : 'bg-white text-gray-600 border border-gray-200'"
+                        class="shrink-0 px-4 py-1.5 rounded-full text-sm font-medium">Tous</button>
+                <template x-for="cat in categoriesNoms" :key="cat">
+                    <button @click="categorieActive = (categorieActive === cat ? null : cat)"
+                            :class="categorieActive === cat ? 'bg-amber-600 text-white' : 'bg-white text-gray-600 border border-gray-200'"
+                            class="shrink-0 px-4 py-1.5 rounded-full text-sm font-medium"
+                            x-text="cat"></button>
+                </template>
+            </div>
         </div>
     </header>
 
@@ -58,7 +69,7 @@
     {{-- Tiroir panier --}}
     <div x-show="panierOuvert" x-cloak class="fixed inset-0 z-30">
         <div class="absolute inset-0 bg-black/50" @click="panierOuvert = false"></div>
-        <div class="absolute bottom-0 left-0 right-0 bg-white rounded-t-2xl max-h-[85vh] flex flex-col">
+        <div class="absolute bottom-0 left-0 right-0 bg-white rounded-t-2xl max-h-[85vh] flex flex-col" style="padding-bottom: env(safe-area-inset-bottom);">
             <div class="p-4 border-b border-gray-200 flex items-center justify-between">
                 <h2 class="text-lg font-bold">Votre commande</h2>
                 <button @click="panierOuvert = false" class="text-gray-500 text-2xl leading-none">×</button>
@@ -81,7 +92,7 @@
                         </div>
                         <input type="text" x-model="item.observations" maxlength="200"
                                placeholder="Observations (ex : sans piment, sans oignon…)"
-                               class="mt-2 w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500">
+                               class="mt-2 w-full border border-gray-300 rounded-lg px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-amber-500">
                     </div>
                 </template>
                 <p x-show="panier.length === 0" class="text-center text-gray-500 py-6">Votre panier est vide.</p>
@@ -89,7 +100,7 @@
 
             <div class="p-4 border-t border-gray-200 space-y-3">
                 <textarea x-model="noteGlobale" maxlength="500" rows="2" placeholder="Note pour la commande (optionnel)"
-                          class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"></textarea>
+                          class="w-full border border-gray-300 rounded-lg px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-amber-500"></textarea>
                 <div class="flex items-center justify-between">
                     <span class="text-gray-600">Total</span>
                     <span class="text-xl font-bold text-amber-700" x-text="formatPrix(totalPanier)"></span>
@@ -111,6 +122,7 @@
         function panier() {
             return {
                 recherche: '',
+                categorieActive: null,
                 panier: JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'),
                 panierOuvert: false,
                 noteGlobale: '',
@@ -129,11 +141,20 @@
                     return new Intl.NumberFormat('fr-FR').format(p) + ' FCFA';
                 },
 
+                get categoriesNoms() {
+                    return CATEGORIES.map(c => c.nom);
+                },
+
                 categoriesFiltrees() {
                     const q = this.recherche.toLowerCase();
-                    if (!q) return CATEGORIES;
                     return CATEGORIES
-                        .map(c => ({ ...c, plats: c.plats.filter(p => (p.nom + ' ' + p.description).toLowerCase().includes(q)) }))
+                        .filter(c => !this.categorieActive || c.nom === this.categorieActive)
+                        .map(c => ({
+                            ...c,
+                            plats: c.plats.filter(p =>
+                                (!q || (p.nom + ' ' + p.description).toLowerCase().includes(q))
+                            ),
+                        }))
                         .filter(c => c.plats.length > 0);
                 },
 
