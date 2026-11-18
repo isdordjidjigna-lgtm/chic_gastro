@@ -149,6 +149,55 @@ class AdminCrudTest extends TestCase
         $this->assertSame(\App\Models\Commande::EN_ATTENTE, $commande->fresh()->statut);
     }
 
+    public function test_filtre_des_plats_par_categorie(): void
+    {
+        $admin = $this->admin();
+        $entrees = Category::create(['nom' => 'Entrées', 'ordre' => 0]);
+        $desserts = Category::create(['nom' => 'Desserts', 'ordre' => 1]);
+        Plat::create(['categorie_id' => $entrees->id, 'nom' => 'Salade César', 'prix' => 3000, 'disponible' => true]);
+        Plat::create(['categorie_id' => $desserts->id, 'nom' => 'Tarte au citron', 'prix' => 2500, 'disponible' => true]);
+
+        // Filtre actif : seul le plat de la catégorie apparaît.
+        $this->actingAs($admin)->get(route('admin.plats.index', ['categorie' => $entrees->id]))
+            ->assertOk()
+            ->assertSee('Salade César')
+            ->assertSee('Entrées')
+            ->assertDontSee('Tarte au citron');
+
+        // Sans filtre : les deux plats apparaissent.
+        $this->actingAs($admin)->get(route('admin.plats.index'))
+            ->assertOk()
+            ->assertSee('Salade César')
+            ->assertSee('Tarte au citron');
+
+        // Le lien depuis la liste des catégories filtre bien.
+        $this->actingAs($admin)->get(route('admin.categories.index'))
+            ->assertOk()
+            ->assertSee('1 plat');
+    }
+
+    public function test_creation_plat_avec_categorie_preselectionnee(): void
+    {
+        $admin = $this->admin();
+        $categorie = Category::create(['nom' => 'Grillades', 'ordre' => 0]);
+
+        $this->actingAs($admin)->get(route('admin.plats.create', ['categorie' => $categorie->id]))
+            ->assertOk()
+            ->assertViewHas('plat.categorie_id', $categorie->id);
+    }
+
+    public function test_suppression_categorie_avec_plats_bloquee(): void
+    {
+        $admin = $this->admin();
+        $categorie = Category::create(['nom' => 'Poissons', 'ordre' => 0]);
+        Plat::create(['categorie_id' => $categorie->id, 'nom' => 'Thon grillé', 'prix' => 7000, 'disponible' => true]);
+
+        $this->actingAs($admin)->delete(route('admin.categories.destroy', $categorie))
+            ->assertRedirect();
+
+        $this->assertDatabaseHas('categories', ['id' => $categorie->id]);
+    }
+
     public function test_historique_des_paiements(): void
     {
         $admin = $this->admin();

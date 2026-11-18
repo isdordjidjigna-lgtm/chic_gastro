@@ -2,7 +2,7 @@
     <x-slot name="header">
         <div class="flex justify-between items-center">
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">Plats</h2>
-            <a href="{{ route('admin.plats.create') }}" class="bg-amber-600 hover:bg-amber-700 text-white px-5 py-2.5 rounded-xl text-sm font-bold shadow-sm">+ Ajouter un plat</a>
+            <a href="{{ route('admin.plats.create', request('categorie') ? ['categorie' => request('categorie')] : []) }}" class="bg-amber-600 hover:bg-amber-700 text-white px-5 py-2.5 rounded-xl text-sm font-bold shadow-sm">+ Ajouter un plat</a>
         </div>
     </x-slot>
 
@@ -23,16 +23,24 @@
                     <x-text-input id="q" name="q" :value="request('q')" placeholder="Nom du plat…" />
                 </div>
                 <div>
-                    <x-input-label for="categorie_id" value="Catégorie" />
-                    <select id="categorie_id" name="categorie_id" class="mt-1 border-gray-300 rounded-md shadow-sm">
+                    <x-input-label for="categorie" value="Catégorie" />
+                    <select id="categorie" name="categorie" class="mt-1 border-gray-300 rounded-md shadow-sm">
                         <option value="">Toutes</option>
                         @foreach($categories as $categorie)
-                            <option value="{{ $categorie->id }}" @selected(request('categorie_id') == $categorie->id)>{{ $categorie->nom }}</option>
+                            <option value="{{ $categorie->id }}" @selected(request('categorie') == $categorie->id)>{{ $categorie->nom }}</option>
                         @endforeach
                     </select>
                 </div>
                 <x-primary-button>Filtrer</x-primary-button>
             </form>
+
+            @if($categorieActive)
+                <div class="flex items-center gap-3">
+                    <h3 class="text-lg font-bold text-gray-800">{{ $categorieActive->nom }}</h3>
+                    <span class="text-sm text-gray-500">({{ $plats->total() }} plat(s))</span>
+                    <a href="{{ route('admin.plats.index') }}" class="text-sm text-amber-700 font-semibold">✕ Tout afficher</a>
+                </div>
+            @endif
 
             <div class="bg-white rounded-xl shadow-sm overflow-x-auto">
                 <table class="w-full text-sm">

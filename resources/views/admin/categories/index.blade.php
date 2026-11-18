@@ -30,9 +30,17 @@
                     <tbody class="divide-y divide-gray-100">
                         @forelse($categories as $categorie)
                             <tr class="hover:bg-amber-50/50 transition">
-                                <td class="px-4 py-3 font-semibold">{{ $categorie->nom }}</td>
+                                <td class="px-4 py-3 font-semibold">
+                                    <a href="{{ route('admin.plats.index', ['categorie' => $categorie->id]) }}" class="text-amber-700 hover:underline">
+                                        {{ $categorie->nom }}
+                                    </a>
+                                </td>
                                 <td class="px-4 py-3">{{ $categorie->ordre }}</td>
-                                <td class="px-4 py-3">{{ $categorie->plats_count }}</td>
+                                <td class="px-4 py-3">
+                                    <a href="{{ route('admin.plats.index', ['categorie' => $categorie->id]) }}" class="px-2 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-800 hover:bg-amber-200">
+                                        {{ $categorie->plats_count }} plat(s)
+                                    </a>
+                                </td>
                                 <td class="px-4 py-3 text-right space-x-3">
                                     <a href="{{ route('admin.categories.edit', $categorie) }}" class="text-blue-600 font-semibold">Modifier</a>
                                     <form method="POST" action="{{ route('admin.categories.destroy', $categorie) }}" class="inline" onsubmit="return confirm('Supprimer cette catégorie ?')">

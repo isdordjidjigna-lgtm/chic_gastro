@@ -15,22 +15,33 @@ class PlatController extends Controller
     public function index(Request $request): View
     {
         $plats = Plat::with('categorie')
-            ->when($request->filled('categorie_id'), fn ($q) => $q->where('categorie_id', $request->categorie_id))
+            ->when($request->filled('categorie'), fn ($q) => $q->where('categorie_id', $request->categorie))
             ->when($request->filled('q'), fn ($q) => $q->where('nom', 'like', '%'.$request->q.'%'))
             ->orderBy('nom')
             ->paginate(15)
             ->withQueryString();
 
+        $categorieActive = $request->filled('categorie')
+            ? Category::find($request->categorie)
+            : null;
+
         return view('admin.plats.index', [
             'plats' => $plats,
             'categories' => Category::orderBy('ordre')->get(),
+            'categorieActive' => $categorieActive,
         ]);
     }
 
-    public function create(): View
+    public function create(Request $request): View
     {
+        $plat = new Plat;
+        // Pré-sélection de la catégorie quand on vient d'une liste filtrée.
+        if ($request->filled('categorie')) {
+            $plat->categorie_id = $request->categorie;
+        }
+
         return view('admin.plats.form', [
-            'plat' => new Plat,
+            'plat' => $plat,
             'categories' => Category::orderBy('ordre')->get(),
         ]);
     }
