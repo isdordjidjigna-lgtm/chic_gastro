@@ -17,8 +17,12 @@ use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
-});
+    if (auth()->check()) {
+        return redirect(auth()->user()->routeAccueil());
+    }
+
+    return view('home');
+})->name('home');
 
 // Espace client : accès anonyme via le QR Code de la table.
 Route::get('/menu/{token}', [MenuController::class, 'show'])->name('menu.show');
