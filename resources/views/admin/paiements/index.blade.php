@@ -23,7 +23,7 @@
                     </thead>
                     <tbody class="divide-y divide-gray-100">
                         @forelse($paiements as $paiement)
-                            <tr>
+                            <tr class="hover:bg-amber-50/50 transition">
                                 <td class="px-4 py-3">{{ $paiement->created_at->format('d/m/Y H:i') }}</td>
                                 <td class="px-4 py-3">
                                     <a class="text-amber-700 font-semibold" href="{{ route('admin.commandes.show', $paiement->commande) }}">

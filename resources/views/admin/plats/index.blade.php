@@ -48,7 +48,7 @@
                     </thead>
                     <tbody class="divide-y divide-gray-100">
                         @forelse($plats as $plat)
-                            <tr class="{{ $plat->disponible ? '' : 'opacity-50' }}">
+                            <tr class="hover:bg-amber-50/50 transition {{ $plat->disponible ? '' : 'opacity-50' }}">
                                 <td class="px-4 py-3"><img src="{{ $plat->photoUrl() }}" class="w-12 h-12 object-cover rounded-lg" alt=""></td>
                                 <td class="px-4 py-3 font-semibold">{{ $plat->nom }}</td>
                                 <td class="px-4 py-3">{{ $plat->categorie->nom }}</td>

@@ -30,7 +30,7 @@
                     </thead>
                     <tbody class="divide-y divide-gray-100">
                         @forelse($users as $user)
-                            <tr class="{{ $user->actif ? '' : 'opacity-50' }}">
+                            <tr class="hover:bg-amber-50/50 transition {{ $user->actif ? '' : 'opacity-50' }}">
                                 <td class="px-4 py-3 font-semibold">{{ $user->name }}</td>
                                 <td class="px-4 py-3">{{ $user->email }}</td>
                                 <td class="px-4 py-3">{{ $user->roleLabel() }}</td>

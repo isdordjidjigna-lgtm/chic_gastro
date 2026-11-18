@@ -29,7 +29,7 @@
                     </thead>
                     <tbody class="divide-y divide-gray-100">
                         @forelse($categories as $categorie)
-                            <tr>
+                            <tr class="hover:bg-amber-50/50 transition">
                                 <td class="px-4 py-3 font-semibold">{{ $categorie->nom }}</td>
                                 <td class="px-4 py-3">{{ $categorie->ordre }}</td>
                                 <td class="px-4 py-3">{{ $categorie->plats_count }}</td>
