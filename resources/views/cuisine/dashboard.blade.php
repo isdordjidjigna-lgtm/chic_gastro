@@ -4,7 +4,7 @@
     </x-slot>
 
     <div class="py-6" x-data="fileCuisine()">
-        <div class="max-w-5xl mx-auto sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <p class="text-sm text-gray-500 mb-4">Actualisation automatique toutes les 7 secondes.</p>
             <div id="zone-commandes">
                 @include('cuisine._commandes')
