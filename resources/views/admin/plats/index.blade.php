@@ -2,7 +2,7 @@
     <x-slot name="header">
         <div class="flex justify-between items-center">
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">Plats</h2>
-            <a href="{{ route('admin.plats.create') }}" class="bg-amber-600 text-white px-4 py-2 rounded-lg text-sm font-semibold">+ Nouveau plat</a>
+            <a href="{{ route('admin.plats.create') }}" class="bg-amber-600 hover:bg-amber-700 text-white px-5 py-2.5 rounded-xl text-sm font-bold shadow-sm">+ Ajouter un plat</a>
         </div>
     </x-slot>
 

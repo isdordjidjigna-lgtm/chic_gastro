@@ -6,6 +6,6 @@
         <rect x="20" y="34" width="8" height="4" rx="1.5" fill="#fff"/>
     </svg>
     <span class="font-bold text-gray-900 tracking-tight leading-none">
-        Chic<span class="text-amber-600">Gastro</span>
+        Chic <span class="text-amber-600">Gastro</span>
     </span>
 </span>

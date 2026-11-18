@@ -1,7 +1,7 @@
 @php
     $user = Auth::user();
     $liensAdmin = [
-        ['admin.plats.index', 'Plats'],
+        ['admin.plats.index', 'Menu (plats)'],
         ['admin.categories.index', 'Catégories'],
         ['admin.tables.index', 'Tables & QR'],
         ['admin.users.index', 'Utilisateurs'],

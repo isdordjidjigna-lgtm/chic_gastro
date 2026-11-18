@@ -29,6 +29,9 @@ class DashboardController extends Controller
             'dernieresCommandes' => Commande::with('table')->latest()->limit(8)->get(),
             'caAujourdhui' => (float) Paiement::whereDate('created_at', today())->sum('montant'),
             'ventes7j' => $this->ventesSeptJours(),
+            // Table utilisée pour prévisualiser le menu client.
+            'tableDemo' => RestaurantTable::where('numero', 'T01')->first()
+                ?? RestaurantTable::orderBy('id')->first(),
         ]);
     }
 
