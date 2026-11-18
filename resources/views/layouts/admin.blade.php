@@ -24,13 +24,13 @@
 <div class="flex min-h-screen">
 
     {{-- ===== Sidebar (desktop) / tiroir (mobile) ===== --}}
-    <aside class="fixed inset-y-0 left-0 z-40 w-64 flex flex-col bg-[#7c2d12] text-amber-100 transition-transform duration-200 lg:translate-x-0"
+    <aside class="fixed inset-y-0 left-0 z-40 w-64 flex flex-col bg-orange-900 text-amber-100 transition-transform duration-200 lg:translate-x-0"
            :class="sidebar ? 'translate-x-0' : '-translate-x-full'">
         <div class="p-5">
             <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 bg-white/10 rounded-2xl p-3">
                 <x-application-logo class="text-sm" />
             </a>
-            <p class="mt-3 px-1 text-[11px] uppercase tracking-widest text-amber-300/70">Pilotage du restaurant</p>
+            <p class="mt-3 px-1 text-xs uppercase tracking-widest text-amber-300/70">Pilotage du restaurant</p>
         </div>
 
         <nav class="flex-1 px-3 space-y-1 overflow-y-auto">
@@ -51,7 +51,7 @@
                 </div>
                 <div class="min-w-0 flex-1">
                     <p class="text-sm font-semibold text-white truncate">{{ $user->name }}</p>
-                    <span class="inline-block px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wide bg-amber-400 text-amber-950">{{ $user->roleLabel() }}</span>
+                    <span class="inline-block px-2 py-0.5 rounded-full text-xs font-bold uppercase tracking-wide bg-amber-400 text-amber-950">{{ $user->roleLabel() }}</span>
                 </div>
             </div>
             <form method="POST" action="{{ route('logout') }}" class="mt-3">
