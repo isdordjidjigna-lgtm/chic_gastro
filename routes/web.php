@@ -58,6 +58,7 @@ Route::middleware(['auth', 'role:'.User::ROLE_ADMIN])->prefix('admin')->name('ad
     Route::resource('commandes', AdminCommandeController::class)->only(['index', 'show', 'update']);
     Route::post('commandes/{commande}/annuler', [AdminCommandeController::class, 'annuler'])->name('commandes.annuler');
     Route::get('commandes/{commande}/facture', [AdminCommandeController::class, 'facture'])->name('commandes.facture');
+    Route::get('commandes/{commande}/facture.pdf', [AdminCommandeController::class, 'facturePdf'])->name('commandes.facture.pdf');
     Route::get('paiements', [AdminPaiementController::class, 'index'])->name('paiements.index');
     Route::get('stats', [StatsController::class, 'index'])->name('stats');
     Route::get('stats/donnees', [StatsController::class, 'donnees'])->name('stats.donnees');

@@ -25,7 +25,7 @@ Application web de commande de plats au restaurant via QR Code. Chaque table pos
 
 - **Statuts** : `en_attente` → `confirmee` → `en_preparation` → `prete` → `servie` → `terminee` (`annulee` possible en début de parcours)
 - **Annulation** : réservée à l'admin, impossible une fois la commande servie, terminée ou déjà annulée (bouton dédié sur la fiche commande — le select de statut ne permet pas d'annuler directement)
-- **Paiement** : espèces uniquement, encaissé par le serveur une fois la commande servie → facture `FAC-AAAAMMJJ-XXXX` imprimable et commande passée à `terminee`
+- **Paiement** : espèces uniquement, encaissé par le serveur une fois la commande servie → facture `FAC-AAAAMMJJ-XXXX` (imprimable ou téléchargeable en PDF via dompdf) et commande passée à `terminee`
 - **Historique des paiements** : `/admin/paiements`
 - **Données de démo** : le seeder crée ~10 jours de commandes terminées, payées et facturées pour alimenter les statistiques, plus 4 commandes « vivantes » dans différents statuts
 

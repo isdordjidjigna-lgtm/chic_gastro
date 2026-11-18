@@ -86,4 +86,18 @@ class CommandeController extends Controller
 
         return view('admin.commandes.facture', ['commande' => $commande]);
     }
+
+    /**
+     * Facture au format PDF, générée côté serveur et téléchargée.
+     */
+    public function facturePdf(Commande $commande): \Symfony\Component\HttpFoundation\Response
+    {
+        abort_unless($commande->facture()->exists(), 404);
+        $commande->load(['table', 'lignes.plat', 'facture', 'paiement.encaisseur']);
+
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('admin.commandes.facture-pdf', ['commande' => $commande])
+            ->setPaper('a4');
+
+        return $pdf->download($commande->facture->numero.'.pdf');
+    }
 }

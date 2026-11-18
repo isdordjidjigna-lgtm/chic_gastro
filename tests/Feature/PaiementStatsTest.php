@@ -98,6 +98,22 @@ class PaiementStatsTest extends TestCase
             ->assertSee('Chic Gastro');
     }
 
+    public function test_facture_pdf_generee_et_telechargee(): void
+    {
+        [$commande, , $serveur, $admin] = $this->commandeServie();
+        $this->actingAs($serveur)->post(route('serveur.commandes.payer', $commande));
+
+        $reponse = $this->actingAs($admin)
+            ->get(route('admin.commandes.facture.pdf', $commande));
+
+        $reponse->assertOk();
+        $this->assertStringContainsString('application/pdf', (string) $reponse->headers->get('content-type'));
+        $this->assertStringContainsString(
+            'attachment; filename='.$commande->facture->numero.'.pdf',
+            (string) $reponse->headers->get('content-disposition')
+        );
+    }
+
     public function test_stats_donnees_json_et_acces_admin_seul(): void
     {
         [$commande, $plat, $serveur, $admin] = $this->commandeServie();

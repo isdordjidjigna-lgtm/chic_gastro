@@ -18,6 +18,7 @@
 <body>
     <div class="no-print" style="margin-bottom:20px;">
         <button onclick="window.print()" style="padding:10px 20px;">Imprimer</button>
+        <a href="{{ route('admin.commandes.facture.pdf', $commande) }}" style="margin-left:10px; padding:10px 20px; background:#b45309; color:#fff; text-decoration:none; border-radius:6px;">Télécharger en PDF</a>
         <a href="{{ route('admin.commandes.show', $commande) }}" style="margin-left:10px;">← Retour</a>
     </div>
 
