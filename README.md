@@ -94,6 +94,22 @@ php artisan test
 
 Les tests tournent sur SQLite en mémoire (`phpunit.xml`), sans toucher à la base MySQL de dev.
 
+## Captures d'écran
+
+Les captures d'écran de l'application sont disponibles dans [`docs/screenshots/`](docs/screenshots/) :
+
+| Écran | Fichier |
+|---|---|
+| Menu client (mobile) | `docs/screenshots/menu-mobile.png` |
+| Panier client | `docs/screenshots/panier.png` |
+| Suivi de commande | `docs/screenshots/suivi-commande.png` |
+| File de cuisine | `docs/screenshots/cuisine.png` |
+| File serveur | `docs/screenshots/serveur.png` |
+| Tableau de bord admin | `docs/screenshots/admin-dashboard.png` |
+| Statistiques | `docs/screenshots/admin-stats.png` |
+| Tables & QR Codes | `docs/screenshots/admin-tables-qr.png` |
+
+Pour ajouter ou mettre à jour une capture, déposer le fichier `.png` dans `docs/screenshots/` en conservant le nom indiqué.
 ## Workflow Git
 
 Une branche par fonctionnalité, merge via pull request vers `main` :
