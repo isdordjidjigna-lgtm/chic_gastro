@@ -10,7 +10,7 @@
     <main class="flex-1 flex items-center justify-center px-4 py-10">
         <div class="max-w-sm w-full text-center space-y-6">
             <div>
-                <h1 class="text-4xl font-bold text-gray-900 tracking-tight">Chic Gastro</h1>
+                <div class="flex justify-center mb-4"><x-application-logo class="text-4xl" /></div>
                 <p class="mt-3 text-gray-600">Scannez le QR Code sur votre table pour consulter la carte et commander depuis votre smartphone.</p>
             </div>
             <div class="bg-white rounded-2xl shadow-sm p-6">
