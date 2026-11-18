@@ -44,10 +44,10 @@
                     </thead>
                     <tbody class="divide-y divide-gray-100">
                         @forelse($commandes as $commande)
-                            <tr>
+                            <tr class="hover:bg-amber-50/50 transition">
                                 <td class="px-4 py-3"><a class="text-amber-700 font-semibold" href="{{ route('admin.commandes.show', $commande) }}">{{ $commande->numero }}</a></td>
                                 <td class="px-4 py-3">{{ $commande->table->numero ?? '—' }}</td>
-                                <td class="px-4 py-3">{{ $commande->statutLabel() }}</td>
+                                <td class="px-4 py-3"><x-statut-badge :statut="$commande->statut" /></td>
                                 <td class="px-4 py-3">{{ number_format($commande->total, 0, ',', ' ') }} FCFA</td>
                                 <td class="px-4 py-3">{{ $commande->created_at->format('d/m/Y H:i') }}</td>
                             </tr>

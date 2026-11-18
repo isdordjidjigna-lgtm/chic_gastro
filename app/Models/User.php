@@ -76,7 +76,7 @@ class User extends Authenticatable
 
     public function roleLabel(): string
     {
-        return self::ROLES[$this->role] ?? $this->role;
+        return self::ROLES[$this->role] ?? ($this->role ?: '—');
     }
 
     /**

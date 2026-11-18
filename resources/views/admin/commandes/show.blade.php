@@ -27,6 +27,7 @@
                     <div><p class="text-gray-500">Total</p><p class="font-bold">{{ number_format($commande->total, 0, ',', ' ') }} FCFA</p></div>
                     <div>
                         <p class="text-gray-500">Statut</p>
+                        <div class="mt-1 mb-2"><x-statut-badge :statut="$commande->statut" /></div>
                         <form method="POST" action="{{ route('admin.commandes.update', $commande) }}" class="flex gap-2 mt-1">
                             @csrf @method('PUT')
                             <select name="statut" class="border-gray-300 rounded-md shadow-sm text-sm">
